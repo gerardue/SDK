@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75de49e4148206642b50b8e6505872aa, type: 3}
   m_Name: LibrarySDK
   m_EditorClassIdentifier: 
-  models:
+  sdk:
   - name: SDK A
     type: 0
     sdk: {fileID: 11500000, guid: be07d5116ae6ccd468b14dc70cb5d076, type: 3}
   - name: SDK B
     type: 1
     sdk: {fileID: 11500000, guid: 1976ca8ff52508c4d8a67eed92ea1839, type: 3}
-  - name: SDK C
-    type: 2
-    sdk: {fileID: 11500000, guid: 6e625c387309e684f8b9bc6115386694, type: 3}
   - name: SDK C
     type: 2
     sdk: {fileID: 11500000, guid: 6e625c387309e684f8b9bc6115386694, type: 3}
