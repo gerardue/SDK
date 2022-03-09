@@ -54,7 +54,10 @@ public class ConsumerSDK : MonoBehaviour
 
     [ContextMenu("Sdk_C")]
     public void SdkC() => RunSdk(TypeSDK.Sdk_C);
-    
+
+    [ContextMenu("Sdk_D")]
+    public void SdkD() => RunSdk(TypeSDK.Sdk_D);
+
 
     #endregion
 }
