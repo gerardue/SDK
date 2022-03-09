@@ -22,15 +22,30 @@ public class SdkModel
     public TypeSDK type;
     public UnityEngine.Object sdk;
 
-    public ISdk Sdk()
+    private ISdk sdkInstance = null;
+
+    public ISdk Sdk { get { return sdkInstance; } }
+
+    public void CreateSdk()
     {
         var typeSdk = Type.GetType(sdk.name);
-        var _sdk = Activator.CreateInstance(typeSdk);
-
-        if (_sdk is ISdk)
-            return (ISdk)_sdk;
-
-        return null;
+        
+        if(sdkInstance == null)
+        {
+            if(typeof(ISdk).IsAssignableFrom(typeSdk))
+            {
+                var _sdk_ = Activator.CreateInstance(typeSdk);
+                sdkInstance = _sdk_ as ISdk; 
+            }
+            else
+            {
+                Debug.Log("This is not a SDK"); 
+            }
+        }
+        else
+        {
+            Debug.Log("it was already created"); 
+        }
     }
 }
 
@@ -43,30 +58,26 @@ public class SdkModel
 public class SOLibrarySDK : ScriptableObject
 {
     [SerializeField]
-    private List<SdkModel> models = new List<SdkModel>();
+    private List<SdkModel> sdk = new List<SdkModel>();
 
-    private Dictionary<TypeSDK, ISdk> sdksAvaliable;
+    private Dictionary<TypeSDK, SdkModel> sdksAvaliable;
 
     /// <summary>
     /// Init sdk availables
     /// </summary>
     public void Init()
     {
-        sdksAvaliable = new Dictionary<TypeSDK, ISdk>();
+        sdksAvaliable = new Dictionary<TypeSDK, SdkModel>();
         sdksAvaliable.Clear();
 
-        ISdk sdkTemp;
-
-        models.ForEach(sdk =>
+        sdk.ForEach(sdk =>
         {
             if (sdk.sdk != null)
             {
-                if (sdksAvaliable.TryGetValue(sdk.type, out ISdk sdk2))
+                if (sdksAvaliable.TryGetValue(sdk.type, out SdkModel tempSdk))
                     return;
 
-                sdkTemp = sdk.Sdk();
-                if (sdkTemp != null)
-                    sdksAvaliable.Add(sdk.type, sdk.Sdk());
+                sdksAvaliable.Add(sdk.type, sdk);
             }
         });
     }
@@ -76,10 +87,15 @@ public class SOLibrarySDK : ScriptableObject
     /// </summary>
     public ISdk GetSDK(TypeSDK typeSdk)
     {
-        ISdk sdk;
+        ISdk sdk = null;
 
-        if (!sdksAvaliable.TryGetValue(typeSdk, out sdk))
-            Debug.Log("Not exits");
+        if (sdksAvaliable.TryGetValue(typeSdk, out SdkModel sdkModel))
+        {
+            sdkModel.CreateSdk();
+            sdk = sdkModel.Sdk; 
+        }
+        else
+            Debug.Log("Not exits this sdk " + typeSdk);
 
         return sdk;
     }
